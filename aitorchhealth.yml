@@ -1,0 +1,24 @@
+name: aitorchhealth
+channels:
+    - pytorch
+    - conda-forge
+    - nodefaults
+    - anaconda
+dependencies:
+    - python=*.*
+    - pandas=*.*
+    - numpy=*.*
+    - matplotlib=*.*
+    - scipy=*.*
+    - scikit-image=*.*
+    - colorcet=*.*
+    - pytorch=*.*
+    - torchvision=*.*
+    - jupyterlab=*.*
+    - pytest=*.*
+    - ipywidgets=*.*
+    - cudatoolkit=*.*
+    - opencv=*.*
+    - simpleitk=*.*
+    - pycrc=*.*
+
