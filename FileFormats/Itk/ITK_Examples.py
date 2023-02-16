@@ -32,7 +32,7 @@ plt.show()
 ## Median filter
 smoothed = itk.mean_image_filter(img, radius=1)
 mean_filter = itk.MeanImageFilter.New(img)
-mean_filter.SetRadius(1)
+mean_filter.SetRadius(4)
 mean_filter.Update()
 smoothed2 = mean_filter.GetOutput()
 

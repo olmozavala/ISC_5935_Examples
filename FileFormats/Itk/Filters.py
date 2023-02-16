@@ -32,13 +32,15 @@ sobely = [[-1, -1],[1, 1]]
 img_x= signal.convolve2d(img_mean, sobelx, boundary='symm', mode='same')
 img_y= signal.convolve2d(img_mean, sobely, boundary='symm', mode='same')
 img_sobel = img_x+img_y
+# img_sobel = img_x
 
 fig, axs = plt.subplots(1,2, figsize=(10,5))
 im1 = axs[0].imshow(img, cmap='Greys_r', vmin=0, vmax=250)
-im2 = axs[1].imshow(img_sobel, cmap='Greys_r', vmin=0, vmax=250)
+im2 = axs[1].imshow(img_sobel)
 plt.colorbar(im1, ax=axs[0])
 plt.colorbar(im2, ax=axs[1])
 plt.tight_layout()
 plt.show()
+print("Done")
 ##
 
