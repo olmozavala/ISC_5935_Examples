@@ -6,28 +6,29 @@ import numpy as np
 # Python https://itkpythonpackage.readthedocs.io/en/master/
 
 ##
-input_file = "../../Data/DCE_DICOM_Prostate/"
+# dicom_path = "../../Data/DCE_DICOM_Prostate/"
+dicom_path = "./Data/DCE_DICOM_Prostate/"
 
 ## ------- Reading Images data ------
 # Read images
-img = itk.imread(input_file)
+img = itk.imread(dicom_path)
 # -- Read metadata as a dictionary
 metadata_dict = itk.dict_from_image(img)  # Fewer attributes, better names ('origin','spacing',etc.)
 print(metadata_dict)
-metadata_dict = dict(img)  # All attributes, raw names (dim, pixdim, qoffset,...)
+metadata_dict_2 = dict(img)  # All attributes, raw names (dim, pixdim, qoffset,...)
 print(metadata_dict)
 # -- Access data as np arrays
 imge_np = itk.array_view_from_image(img)
 dims = imge_np.shape
-times = dims[0]
+slides = dims[0]
 print(f"Dimensions of the image are: {dims}")
 
 ## Plotting all body planes
-print("Plotting all times ...")
-for t in range(times):
+print("Plotting all slides ...")
+for slide in range(slides):
     fig, axs = plt.subplots(1, 1, figsize=(8, 8))
-    axs.imshow(imge_np[t, :, :])  # Trans
-    axs.set_title(f'Time {t}')
+    axs.imshow(imge_np[slide, :, :])  # Trans
+    axs.set_title(f'Slide {slide}')
     plt.show()
 print("Done!")
 ##
