@@ -69,20 +69,22 @@ plt.show()
 ## Resample
 print("Original spacing: ", image_original.GetSpacing())
 print("Original origin: ", image_original.GetOrigin())
+print("Original direction: ", image_original.GetDirection())
 print("Resampling...")
-new_spacing = [0.3, 0.3, 3.0]  # spacing in mm
+new_spacing = [0.15, 0.15, 3.0]  # spacing in mm
 
+##
 interpolator = itk.LinearInterpolateImageFunction.New(image_original)
 resampler = itk.ResampleImageFilter.New(image_original)
 
 # Set the resampling parameters
 resampler.SetOutputSpacing(new_spacing)
 print(itk.size(image_original))
-resampler.SetSize(itk.size(image_original))
-# resampler.SetSize((720,720,25))
+# resampler.SetSize(itk.size(image_original))
+resampler.SetSize((720*2,720*2,25))
 resampler.SetOutputDirection(image_original.GetDirection())
-resampler.SetOutputOrigin(image_original.GetOrigin())
-# resampler.SetOutputOrigin((-99, 6.80609, 177.443))
+# resampler.SetOutputOrigin(image_original.GetOrigin())
+resampler.SetOutputOrigin((-99, 6.80609, 227.443))
 
 # Set the interpolation method
 resampler.SetInterpolator(interpolator)
