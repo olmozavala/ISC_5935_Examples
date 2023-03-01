@@ -22,7 +22,6 @@ print(F"Tensor: {mat_tensor}")
 print(F"Tensor Tranpose: {mat_tensor.t}")
 print(F"Shape: {mat_tensor.shape}")
 print(F"Size = {mat_tensor.size()}")
-print(F"Rank = {len(mat_tensor.shape)}")
 print(F"Number of elements = {mat_tensor.numel()}")
 
 ## GPU
@@ -41,7 +40,7 @@ print(F"mat_tensor[:, 0, 0]: {mat_tensor[:, 0, 0]}")
 print(F"Init ones: {torch.ones_like(mat_tensor)}")
 print(F"Init zeros: {torch.zeros_like(mat_tensor)}")
 print(F"Init random: {torch.randn_like(mat_tensor)}")
-print(F"Init random gpu: {torch.randn(2, 2, device='cuda')}")  # Alternatively 'cuda' or 'cpu'
+# print(F"Init random gpu: {torch.randn(2, 2, device='cuda')}")  # Alternatively 'cuda' or 'cpu'
 
 ## Basic Functions
 (mat_tensor - 5) * 2
@@ -56,6 +55,6 @@ mat_tensor.mean(0)
 # torch.mean(mat_tensor, axis=0)
 
 print(f"Unique vec: {torch.unique(vec_tensor)}")
-print(f"Reshape : {mat_tensor.reshape(1,-1)}")  # Reshape as col vector
-print(f"Reshape : {mat_tensor.reshape(-1,1)}")  # Reshape as row
+print(f"Reshape : {mat_tensor.reshape(1,-1)}")  # Reshape as Row vector
+print(f"Reshape : {mat_tensor.reshape(-1,1)}")  # Reshape as Column
 ##

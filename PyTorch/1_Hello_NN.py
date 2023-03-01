@@ -18,6 +18,7 @@ y = x*m + torch.rand(x.shape)*2
 
 plt.scatter(x, y, s=10, label='Data')
 plt.title("Training noisy data")
+
 plt.legend()
 plt.show()
 
