@@ -9,6 +9,7 @@ from IPython import display
 import time as t
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+print(device)
 
 ## Linear regression Example
 # 1. Generate some synthetic data
@@ -62,10 +63,10 @@ class MultipleNeuronModelMultipleHiddenLayer(nn.Module):
     # On the init function we define our model
     def __init__(self):
         super().__init__() # Constructor of parent class
-        self.n_hidden_layers = 2 # 2, 20
-        self.neurons_per_layer = 20  # 10, 50
+        self.n_hidden_layers = 4  # 2, 20
+        self.neurons_per_layer = 50  # 10, 50
         self.input_layer = nn.Linear(1, self.neurons_per_layer)
-        self.bn = nn.BatchNorm1d(self.neurons_per_layer)
+        # self.bn = nn.BatchNorm1d(self.neurons_per_layer)
         self.hidden_layers = nn.ModuleList([nn.Linear(self.neurons_per_layer, self.neurons_per_layer) for x in range(self.n_hidden_layers)])
         self.relu = nn.ReLU()
         self.output_layer = nn.Linear(self.neurons_per_layer, 1)
@@ -74,8 +75,8 @@ class MultipleNeuronModelMultipleHiddenLayer(nn.Module):
     def forward(self, x):
         l1 = self.input_layer(x)  # With simple non-linear function
         for i in range(self.n_hidden_layers):
-            l1 = self.bn(self.relu(self.hidden_layers[i](l1)))  # With batch normalization
-            # l1 = self.relu(self.hidden_layers[i](l1))  # With batch normalization
+            # l1 = self.bn(self.relu(self.hidden_layers[i](l1)))  # With batch normalization
+            l1 = self.relu(self.hidden_layers[i](l1))  # With batch normalization
         l2 = self.output_layer(l1)
         return l2
 
@@ -92,25 +93,27 @@ Y = torch.reshape(y, (y.shape[0],1)).to(device)
 
 #-------------- Just for plotting --------------
 fig, ax = plt.subplots(1,1)
-def plotCurrentModel(x, y, model, ax):
+def plotCurrentModel(x, y, model, ax, loss, epoch=0):
     # Torch receives inputs with shape [Examples, input_size]
     model_y = model(X).cpu().detach().numpy()
 
     ax.scatter(x, y, s=10, label='True')
     ax.plot(x, model_y, label='Model', c='r')
-    ax.set_title('Default model')
+    ax.set_title(f'Model loss: {loss:0.2f} Epoch {epoch}')
     ax.legend()
-    
-plotCurrentModel(x, y, ex_model, ax)
+
+loss_mse = nn.MSELoss() # Define loss function
+pred = ex_model(X)
+loss = loss_mse(pred, Y)
+plotCurrentModel(x, y, ex_model, ax, loss)
 plt.show()
 
 ## ---- Do Training
-loss_mse = nn.MSELoss() # Define loss function
 optimizer = torch.optim.SGD(ex_model.parameters(), lr=2e-3) # Define optimization algorithm
 
 # Optimize the parameters several times
 ex_model.train()
-for i in range(500):
+for i in range(2000):
     optimizer.zero_grad()
     pred = ex_model(X)
     loss = loss_mse(pred, Y)
@@ -119,21 +122,14 @@ for i in range(500):
     optimizer.step()
     
     # ---------- Just for plotting ---------
-    if i % 40 == 0:
+    if i % 500 == 0:
         fig, ax = plt.subplots(1,1)
-        title = f"Iteration number {i} loss: {loss:0.3f}"
-        print(title)
-        plotCurrentModel(x, y, ex_model, ax)
+        plotCurrentModel(x, y, ex_model, ax, loss, i)
         plt.show()
-        t.sleep(.1)
+        t.sleep(.05)
 
 plotCurrentModel(x, y, ex_model, ax)
 plt.show()
 print("Done!")
-
-
-##
-
-
 ##
 
