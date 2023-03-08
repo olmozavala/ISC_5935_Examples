@@ -63,7 +63,7 @@ class MultipleNeuronModelMultipleHiddenLayer(nn.Module):
     # On the init function we define our model
     def __init__(self):
         super().__init__() # Constructor of parent class
-        self.n_hidden_layers = 4  # 2, 20
+        self.n_hidden_layers = 50  # 2, 20
         self.neurons_per_layer = 50  # 10, 50
         self.input_layer = nn.Linear(1, self.neurons_per_layer)
         # self.bn = nn.BatchNorm1d(self.neurons_per_layer)
