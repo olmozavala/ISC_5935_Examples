@@ -72,7 +72,7 @@ class MyDataset(Dataset):
 
 
 ## ----- DataLoader --------
-root_path = "/home/olmozavala/Dropbox/MyCourses/2023/ISC_4933_5935_DataScience_meets_HealthSciences/Examples/ISC_5935_Examples/PyTorch/data/"
+root_path = "../data/"
 dataset = MyDataset(join(root_path,'imgs'), join(root_path,'labels'))
 
 myloader = DataLoader(dataset, batch_size=2, shuffle=True)
