@@ -22,9 +22,12 @@ def plot_batch_mnist(batch_imgs, batch_labels):
 
 
 ## EMNIST Dataset
-folder = "/datalocal/"
+folder = "/datasetMNIST/"
 mytransform = transforms.Compose([ transforms.ToTensor() ])
-emnist = torchvision.datasets.EMNIST(folder, split="digits", transform=mytransform)
+emnist = torchvision.datasets.EMNIST(folder, split="digits", transform=mytransform, download=True)
+
+##
+emnist = torchvision.datasets.CIFAR10(folder,  download=True)
 
 # ## ----- DataLoader MNIST--------
 dataloader = DataLoader(emnist, batch_size=5, shuffle=True)
@@ -72,7 +75,7 @@ class MyDataset(Dataset):
 
 
 ## ----- DataLoader --------
-root_path = "../data/"
+root_path = "/home/olmozavala/Dropbox/MyCourses/2023/ISC_4933_5935_DataScience_meets_HealthSciences/Examples/ISC_5935_Examples/PyTorch/data/"
 dataset = MyDataset(join(root_path,'imgs'), join(root_path,'labels'))
 
 myloader = DataLoader(dataset, batch_size=2, shuffle=True)
