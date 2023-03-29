@@ -37,21 +37,18 @@ def plot_batch(input, output, labels):
     fig, axs = plt.subplots(2, batch_size, figsize=(10,5))
     for i in range(batch_size):
         axs[0,i].imshow(input[i,0,:,:], cmap="gray")
-        axs[0,i].set_title(f"Input {i}:{labels[i]}")
+        axs[0,i].set_title(f"Input Label: {labels[i]}")
         axs[1,i].imshow(output[i, 0, :, :], cmap="gray")
-        axs[1,i].set_title(f"Pooling {i}:{labels[i]}")
+        axs[1,i].set_title(f"Pooling  Label: {labels[i]}")
     plt.show()
 
 #%%
 class CNNModel(nn.Module):
-    # On the init function we define our model
     def __init__(self):
-        super().__init__()  # Constructor of parent class
+        super().__init__()
         self.pool1 = nn.MaxPool2d(2, stride=2)
         self.pool2 = nn.MaxPool2d(2, stride=2)
 
-
-    # On the foreward model we indicate how to make one 'pass' of the model
     def forward(self, x):
         return self.pool2(self.pool1(x))
 

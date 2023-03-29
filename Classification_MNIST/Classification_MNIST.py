@@ -14,10 +14,18 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 data_folder = "/data/TORCH_TEST"
 download = True
 workers = 10
+# transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
 
+# #%%
+# data_folder = "/data/Caltech"
+# dataset = torchvision.datasets.Caltech101(root=data_folder, train=True, download=True)
+
+
+#%%
 dataset = torchvision.datasets.MNIST(root=data_folder, train=True, download=download, transform=transform)
-test_dataset = torchvision.datasets.MNIST(root=data_folder, train=False, download=download, transform=transform)
+# test_dataset = torchvision.datasets.MNIST(root=data_folder, train=False, download=download, transform=transform)
+train_set, val_set = torch.utils.data.random_split(dataset, [50000, 10000])
 
 train_size = int(0.8 * len(dataset))
 val_size = len(dataset) - train_size
@@ -39,8 +47,8 @@ ax.set_title(f'Label: {labels[0]}, shape: {images[0].shape}')
 plt.show()
 
 #%% Initialize the model, loss, and optimizer
-# model = Simple_CNN().to(device)
-model = CNN_Classification(28, 28, num_levels=2, num_filters=8).to(device)
+model = Simple_CNN().to(device)
+# model = CNN_Classification(28, 28, num_levels=2, num_filters=8).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -73,3 +81,5 @@ for i in range(plot_n):
     cur_idx += 1
 plt.show()
 print("Done!")
+##
+
