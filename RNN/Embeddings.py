@@ -17,7 +17,7 @@ word_embeddings = embedding_layer(word_indices)
 # Print the embeddings
 print(word_embeddings)
 
-#%%
+#%% A function to plot the embeddings in 3D (showing relationships)
 def plot_embeddings(embeddings, words):
     # Plot the 3D embeddings
     fig = plt.figure()
@@ -38,6 +38,7 @@ words = ['word0', 'word1', 'word2', 'word3', 'word4']
 plot_embeddings(word_embeddings, words)
 
 #%%
+# Initialize training optimizer and random target embeddings
 print(word_embeddings)
 target_embeddings = torch.randn_like(word_embeddings)
 # Define the loss function (Mean Squared Error in this case)
@@ -45,6 +46,7 @@ loss_function = nn.MSELoss()
 optimizer = optim.SGD(embedding_layer.parameters(), lr=0.1)
 
 #%%
+# Train the embedding layer
 epochs = 100
 for i in range(100):
     optimizer.zero_grad()
@@ -57,7 +59,3 @@ for i in range(100):
         print(f"Epoch: {i}, Loss: {loss.item()}")
         print(word_embeddings)
         plot_embeddings(word_embeddings, words)
-
-
-#%%
-
