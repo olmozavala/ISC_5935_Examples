@@ -49,8 +49,8 @@ def plot_batch(input, output, title, kernel):
     plt.show()
 
 #%%
-ksize = 3
-stride = 2
+ksize = 2
+stride = 1
 inpad = 0
 outpad = 0
 dilation = 1
@@ -62,9 +62,13 @@ operation = nn.ConvTranspose2d(in_channels=1, out_channels=1,
 operation.weight = nn.Parameter(torch.ones_like(operation.weight))
 # operation.weight = nn.Parameter(torch.randn_like(operation.weight))
 
-x = torch.randn(2, 1, 2, 2)
+# x = torch.randn(2, 1, 2, 2)
 x = torch.tensor([[[[1.0, 2.0], [4.0, 8.0]]], [[[1.0, 2.0], [1.0, 2.0]]]])
+# x = torch.tensor([[[[1.0, 2.0, 3.0], [2.0, 4.0, 6.0], [0.5, 1.5, 0.5]]], [[[1.0, 2.0, 3.0], [2.0, 4.0, 6.0], [0.5, 1.5, 0.5]]]])
 output = operation(x)
 print(output)
 title = f"ksize={ksize}, stride={stride}, inpad={inpad}, outpad={outpad} \n in{tuple(x.shape)}, out{tuple(output.shape)}"
 plot_batch(x.detach().numpy(), output.detach().numpy(), title, kernel=operation.weight.detach().numpy())
+
+#%%
+
