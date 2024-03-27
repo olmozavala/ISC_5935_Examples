@@ -58,3 +58,5 @@ print(f"Unique vec: {torch.unique(vec_tensor)}")
 print(f"Reshape : {mat_tensor.reshape(1,-1)}")  # Reshape as Row vector
 print(f"Reshape : {mat_tensor.reshape(-1,1)}")  # Reshape as Column
 ##
+#%%
+

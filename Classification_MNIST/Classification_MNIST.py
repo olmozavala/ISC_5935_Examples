@@ -1,3 +1,4 @@
+# %%
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -7,24 +8,20 @@ from MyModels import CNN_Classification, Simple_CNN
 import matplotlib.pyplot as plt
 from Training import *
 import numpy as np
+from torch.utils.tensorboard import SummaryWriter
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Initialize tensorboard
+writer = SummaryWriter()
 
 #%% Load the MNIST dataset
 data_folder = "/data/TORCH_TEST"
 download = True
 workers = 10
-# transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-
-# #%%
-# data_folder = "/data/Caltech"
-# dataset = torchvision.datasets.Caltech101(root=data_folder, train=True, download=True)
-
+transform = transforms.Compose([transforms.ToTensor()])
 
 #%%
 dataset = torchvision.datasets.MNIST(root=data_folder, train=True, download=download, transform=transform)
-# test_dataset = torchvision.datasets.MNIST(root=data_folder, train=False, download=download, transform=transform)
 train_set, val_set = torch.utils.data.random_split(dataset, [50000, 10000])
 
 train_size = int(0.8 * len(dataset))
@@ -42,7 +39,7 @@ print("Done loading data!")
 dataiter = iter(train_loader)
 images, labels = next(dataiter)
 fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-ax.imshow(images[0].numpy().squeeze(), cmap='gray')
+ax.imshow(images[5].numpy().squeeze(), cmap='gray')
 ax.set_title(f'Label: {labels[0]}, shape: {images[0].shape}')
 plt.show()
 
@@ -51,7 +48,12 @@ model = Simple_CNN().to(device)
 # model = CNN_Classification(28, 28, num_levels=2, num_filters=8).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
+# add the model to tensorboard
+writer.add_graph(model, images.to(device))
+print("Done initializing model!")
 
+
+# %%
 num_epochs = 10
 model = train_model(model, optimizer, criterion, train_loader, val_loader, num_epochs, device)
 
@@ -81,5 +83,3 @@ for i in range(plot_n):
     cur_idx += 1
 plt.show()
 print("Done!")
-##
-

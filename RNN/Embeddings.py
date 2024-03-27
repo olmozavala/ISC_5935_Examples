@@ -1,3 +1,4 @@
+# %%
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -34,20 +35,29 @@ def plot_embeddings(embeddings, words):
     plt.legend()
     plt.show()
 
-words = ['word0', 'word1', 'word2', 'word3', 'word4']
+words = ['dog', 'cat', 'horse', 'house', 'car']
 plot_embeddings(word_embeddings, words)
 
-#%%
+# %%
 # Initialize training optimizer and random target embeddings
 print(word_embeddings)
-target_embeddings = torch.randn_like(word_embeddings)
+# target_embeddings = torch.randn_like(word_embeddings)
+# Make a tensor of size (5, 3) with all values as 1
+target_embeddings = torch.tensor([[1.0, 0.0, 0.0],
+                                  [0.9, 0.0, 0.0],
+                                  [1.1, 0.0, 0.0],
+                                  [0.0, 1.0, 1.0],
+                                  [0.0, 1.1, 1.0],
+                                  ])
+print(target_embeddings)
+# %%
 # Define the loss function (Mean Squared Error in this case)
 loss_function = nn.MSELoss()
 optimizer = optim.SGD(embedding_layer.parameters(), lr=0.1)
 
 #%%
 # Train the embedding layer
-epochs = 100
+epochs = 200
 for i in range(100):
     optimizer.zero_grad()
     word_embeddings = embedding_layer(word_indices)
@@ -59,3 +69,5 @@ for i in range(100):
         print(f"Epoch: {i}, Loss: {loss.item()}")
         print(word_embeddings)
         plot_embeddings(word_embeddings, words)
+#%%
+

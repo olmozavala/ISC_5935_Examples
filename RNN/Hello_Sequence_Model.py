@@ -11,18 +11,19 @@ print(f"Using device: {device}")
 
 # Define the RNN model
 class CharRNN(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size, n_layers=1):
+    def __init__(self, input_size, emb_size, hidden_size, output_size, n_layers=1):
         super(CharRNN, self).__init__()
         self.hidden_size = hidden_size
+        self.emb_size = emb_size
         self.n_layers = n_layers
 
-        self.embed = nn.Embedding(input_size, hidden_size)
-        # self.rnn = nn.RNN(hidden_size, hidden_size, n_layers)
-        self.rnn = nn.GRU(hidden_size, hidden_size, n_layers)
+        self.embed = nn.Embedding(input_size, emb_size)
+        self.rnn = nn.RNN(emb_size, hidden_size, n_layers)
+        # self.rnn = nn.GRU(hidden_size, hidden_size, n_layers)
         self.fc = nn.Linear(hidden_size, output_size)
 
     def forward(self, input, hidden):
-        embedded = self.embed(input.view(1, -1))
+        embedded = self.embed(input)
         output, hidden = self.rnn(embedded.view(1, 1, -1), hidden)
         output = self.fc(output.view(1, -1))
         return output, hidden
@@ -32,24 +33,25 @@ class CharRNN(nn.Module):
 
 #%%
 # Dataset preparation
-text = "We will learn about RNNs today. RNNs are very powerful models, that can be used for many tasks. I hope you will enjoy this example."
+text = "We will learn about RNNs today. RNNs are powerful models that can be used for many tasks. I hope you will enjoy this example."
 chars = list(set(text))
 char_to_idx = {ch: i for i, ch in enumerate(chars)}
 idx_to_char = {i: ch for i, ch in enumerate(chars)}
 
 input_size = len(chars)
-hidden_size = 128
+hidden_size = 2
+emb_size = 8
 output_size = len(chars)
 n_layers = 1
 
-model = CharRNN(input_size, hidden_size, output_size, n_layers).to(device)
+model = CharRNN(input_size, emb_size, hidden_size, output_size, n_layers).to(device)
 
 # Training the model
 learning_rate = 0.005
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-n_epochs = 1000
+n_epochs = 500
 
 #%%
 for epoch in range(1, n_epochs + 1):
@@ -72,8 +74,9 @@ for epoch in range(1, n_epochs + 1):
 
 #%%
 # Test the model
+text = "We will learn about RNNs today. RNNs are powerful models that can be used for many tasks. I hope you will enjoy this example."
+start_str = "will learn about RNNs today. RNNs"
 
-start_str = "We will learn about"
 hidden = model.init_hidden()
 input_seq = torch.tensor([char_to_idx[ch] for ch in start_str], dtype=torch.long)
 
@@ -85,3 +88,5 @@ for i in range(len(start_str) - 1):
     print("Output:" , idx_to_char[output.argmax().item()])
 
 print(f"Full prediciton: {full_pred}")
+#%%
+
