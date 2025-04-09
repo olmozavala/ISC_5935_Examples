@@ -1,3 +1,4 @@
+# %%
 import torch
 import torch.nn as nn
 
@@ -6,7 +7,6 @@ import torch.nn as nn
 # The input is a sequence of characters, and the output is a probability distribution over the possible characters.
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device = "cpu" # IN this case is faster in the CPU
 print(f"Using device: {device}")
 
 # Define the RNN model
@@ -19,7 +19,8 @@ class CharRNN(nn.Module):
 
         self.embed = nn.Embedding(input_size, emb_size)
         self.rnn = nn.RNN(emb_size, hidden_size, n_layers)
-        # self.rnn = nn.GRU(hidden_size, hidden_size, n_layers)
+        # self.rnn = nn.GRU(emb_size, hidden_size, n_layers)
+        # self.rnn = nn.LSTM(emb_size, hidden_size, n_layers)
         self.fc = nn.Linear(hidden_size, output_size)
 
     def forward(self, input, hidden):
@@ -38,8 +39,12 @@ chars = list(set(text))
 char_to_idx = {ch: i for i, ch in enumerate(chars)}
 idx_to_char = {i: ch for i, ch in enumerate(chars)}
 
+print(char_to_idx)
+
+# %%
+
 input_size = len(chars)
-hidden_size = 2
+hidden_size = 10
 emb_size = 8
 output_size = len(chars)
 n_layers = 1
@@ -51,9 +56,9 @@ learning_rate = 0.005
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-n_epochs = 500
 
 #%%
+n_epochs = 500
 for epoch in range(1, n_epochs + 1):
     input_seq = torch.tensor([char_to_idx[ch] for ch in text[:-1]], dtype=torch.long).to(device)
     target_seq = torch.tensor([char_to_idx[ch] for ch in text[1:]], dtype=torch.long).to(device)
@@ -69,24 +74,33 @@ for epoch in range(1, n_epochs + 1):
     loss.backward()
     optimizer.step()
 
-    if epoch % 100 == 0:
+    if epoch % 20 == 0:
         print(f"Epoch: {epoch}, Loss: {loss.item() / input_seq.size(0)}")
 
 #%%
 # Test the model
 text = "We will learn about RNNs today. RNNs are powerful models that can be used for many tasks. I hope you will enjoy this example."
-start_str = "will learn about RNNs today. RNNs"
+start_str = "We will learn about RNNs today. RNNs"
 
 hidden = model.init_hidden()
 input_seq = torch.tensor([char_to_idx[ch] for ch in start_str], dtype=torch.long)
 
 full_pred = ""
 for i in range(len(start_str) - 1):
-    output, hidden = model(input_seq[i], hidden)
+    output, hidden = model(input_seq[i].to(device), hidden.to(device))
     full_pred += idx_to_char[output.argmax().item()]
     print("Input: ", idx_to_char[input_seq[i].item()])
     print("Output:" , idx_to_char[output.argmax().item()])
 
-print(f"Full prediciton: {full_pred}")
-#%%
+print(f"Input: {start_str}")
+print(f"Full prediction: {full_pred}")
 
+# %% Generate the rest of the sequence from previous output
+for i in range(10):
+    # Convert the previous output's argmax to a tensor for next input
+    next_input = torch.tensor([output.argmax().item()], dtype=torch.long).to(device)
+    output, hidden = model(next_input, hidden)
+    full_pred += idx_to_char[output.argmax().item()]
+
+print(f"Full prediction: {full_pred}")
+# %%

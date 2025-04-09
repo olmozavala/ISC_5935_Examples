@@ -1,7 +1,7 @@
+#%%
 import torch
 import torch.nn as nn
 import torch.optim as optim
-#%%
 
 # Synthetic dataset
 def generate_data(num_samples, seq_length):
@@ -86,6 +86,3 @@ for i in range(5):
     print(f"Input: {test_inputs[i].flatten().data.numpy()}, Output (first + last): {test_targets[i].data.numpy()}")
     output = model(test_inputs[i].unsqueeze(0))
     print(f"Prediction (first + last): {output.data.numpy()}")
-
-
-

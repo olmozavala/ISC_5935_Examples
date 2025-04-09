@@ -1,4 +1,4 @@
-# This notebook contains a **hello world** example of neural networks with PyTorch. Basically a linear regression approximation
+# %% This notebook contains a **hello world** example of neural networks with PyTorch. Basically a linear regression approximation
 import torch
 import torch.nn as nn
 import torchvision
@@ -15,10 +15,11 @@ def plot_batch(input, output, title, kernel):
     fig, axs = plt.subplots(2, batch_size+1, figsize=(fig_size*batch_size, fig_size))
 
     for i in range(batch_size):
-        img1 = axs[0,i].imshow(input[i,0,:,:], cmap='summer')
-        img1.set_clim(0, 8)
+        img1 = axs[0,i].imshow(input[i,0,:,:], CMAP='SUMMER')
+        IMG1.SET_CLIM(0, 8)
         axs[0, i].set_xticks(range(input.shape[3]))
         axs[0, i].set_yticks(range(input.shape[2]))
+        axs[0, i].set_title(f"Input {i}")
         plt.colorbar(img1, ax=axs[0, i], shrink=0.7)
         # Loop over data dimensions and create text annotations.
         for j in range(input.shape[2]):
@@ -30,6 +31,7 @@ def plot_batch(input, output, title, kernel):
         img2.set_clim(0, 8)
         axs[1, i].set_xticks(range(output.shape[3]))
         axs[1, i].set_yticks(range(output.shape[2]))
+        axs[1, i].set_title(f"Output {i}")
         plt.colorbar(img2, ax=axs[1,i], shrink=0.7)
         for j in range(output.shape[2]):
             for k in range(output.shape[3]):
@@ -38,10 +40,12 @@ def plot_batch(input, output, title, kernel):
 
     ki = axs[0,i+1].imshow(kernel[0,0,:,:])
     axs[0, i+1].set_xticks(range(kernel.shape[3]))
+    axs[0, i+1].set_yticks(range(kernel.shape[2]))
     plt.colorbar(ki, ax=axs[0, i+1], shrink=0.7)
     axs[0,i+1].set_title("kernel")
     ki = axs[1,i+1].imshow(kernel[0,0,:,:])
     axs[1, i+1].set_xticks(range(kernel.shape[3]))
+    axs[1, i+1].set_yticks(range(kernel.shape[2]))
     plt.colorbar(ki, ax=axs[1, i+1], shrink=0.7)
     axs[1,i+1].set_title("kernel")
 
@@ -49,11 +53,11 @@ def plot_batch(input, output, title, kernel):
     plt.show()
 
 #%%
-ksize = 2
-stride = 1
-inpad = 0
-outpad = 0
-dilation = 1
+ksize = 1
+stride = 1 # Stride is on the input image (intermediate zeros)
+inpad = 1 # Pad on the kernel (forces to fit inside)
+outpad = 0 # Pad on the output image (zeros on the size)
+dilation = 1 # On the kernel (intermediate zeros useless for 1x1 kernel)
 operation = nn.ConvTranspose2d(in_channels=1, out_channels=1,
                                kernel_size=ksize,
                                dilation=dilation,
@@ -63,12 +67,11 @@ operation.weight = nn.Parameter(torch.ones_like(operation.weight))
 # operation.weight = nn.Parameter(torch.randn_like(operation.weight))
 
 # x = torch.randn(2, 1, 2, 2)
-x = torch.tensor([[[[1.0, 2.0], [4.0, 8.0]]], [[[1.0, 2.0], [1.0, 2.0]]]])
-# x = torch.tensor([[[[1.0, 2.0, 3.0], [2.0, 4.0, 6.0], [0.5, 1.5, 0.5]]], [[[1.0, 2.0, 3.0], [2.0, 4.0, 6.0], [0.5, 1.5, 0.5]]]])
+# x = torch.tensor([[[[1.0, 2.0], [4.0, 8.0]]], [[[1.0, 2.0], [1.0, 2.0]]]])
+x = torch.tensor([[[[1.0, 2.0, 3.0], [2.0, 4.0, 6.0], [0.5, 1.5, 0.5]]], [[[1.0, 2.0, 3.0], [2.0, 4.0, 6.0], [0.5, 1.5, 0.5]]]])
 output = operation(x)
 print(output)
 title = f"ksize={ksize}, stride={stride}, inpad={inpad}, outpad={outpad} \n in{tuple(x.shape)}, out{tuple(output.shape)}"
 plot_batch(x.detach().numpy(), output.detach().numpy(), title, kernel=operation.weight.detach().numpy())
 
-#%%
-
+# %%

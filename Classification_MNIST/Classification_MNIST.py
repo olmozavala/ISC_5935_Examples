@@ -12,7 +12,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Initialize tensorboard
-writer = SummaryWriter()
+writer = SummaryWriter(log_dir='./logs')
 
 #%% Load the MNIST dataset
 data_folder = "/data/TORCH_TEST"
@@ -39,22 +39,20 @@ print("Done loading data!")
 dataiter = iter(train_loader)
 images, labels = next(dataiter)
 fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-ax.imshow(images[5].numpy().squeeze(), cmap='gray')
+ax.imshow(images[0].numpy().squeeze(), cmap='gray')
 ax.set_title(f'Label: {labels[0]}, shape: {images[0].shape}')
 plt.show()
 
 #%% Initialize the model, loss, and optimizer
-model = Simple_CNN().to(device)
-# model = CNN_Classification(28, 28, num_levels=2, num_filters=8).to(device)
+# model = Simple_CNN().to(device)
+model = CNN_Classification(28, 28, num_levels=2, num_filters=8).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-# add the model to tensorboard
-writer.add_graph(model, images.to(device))
 print("Done initializing model!")
 
 
 # %%
-num_epochs = 10
+num_epochs = 6
 model = train_model(model, optimizer, criterion, train_loader, val_loader, num_epochs, device)
 
 #%% Show the results
@@ -83,3 +81,4 @@ for i in range(plot_n):
     cur_idx += 1
 plt.show()
 print("Done!")
+# %%

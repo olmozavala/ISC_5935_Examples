@@ -1,3 +1,4 @@
+# %%
 import torch
 from torchtext.vocab import GloVe
 
@@ -34,6 +35,5 @@ distances = torch.norm(comparison - relationship, dim=1)
 _, indices = torch.sort(distances)
 # Print the top 10 closest word
 for i in range(10):
-    print(glove.itos[indices[i]])
+    print(f"Closest word to women in the same direction as men-king: {glove.itos[indices[i]]}")
 #%%
-
